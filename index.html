@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Nail the Changes</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            /* Light grey background */
+            font-family: 'Arial', sans-serif;
+            /* Use a more readable font */
+        }
+
+        .note-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 38pt;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        select,
+        label,
+        .chord-options {
+            font-size: 16pt;
+            margin-top: 20px;
+        }
+
+        select {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .chord-options label {
+            display: inline-block;
+            /* Make each label+checkbox appear on a new line */
+            margin: 5px 0;
+            /* Add some space between each checkbox */
+        }
+    </style>
+    <script>
+        var intervalId;
+
+        function getRandomNote() {
+            var includeSharps = document.getElementById('includeSharps').checked;
+            var includeFlats = document.getElementById('includeFlats').checked;
+            var notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+            var sharps = ['C#', 'D#', 'F#', 'G#', 'A#'];
+            var flats = ['Db', 'Eb', 'Gb', 'Ab', 'Bb'];
+
+            if (includeSharps) {
+                notes = notes.concat(sharps);
+            }
+            if (includeFlats) {
+                notes = notes.concat(flats);
+            }
+
+            var randomIndex = Math.floor(Math.random() * notes.length);
+            return notes[randomIndex];
+        }
+        function getRandomChordType() {
+            var chordTypes = document.querySelectorAll('.chord-option:checked');
+            var selectedChordTypes = [];
+            chordTypes.forEach(function (chordType) {
+                selectedChordTypes.push(chordType.value);
+            });
+
+            if (selectedChordTypes.length === 0) {
+                return ''; // Return an empty string if no chord types are selected
+            }
+
+            var randomIndex = Math.floor(Math.random() * selectedChordTypes.length);
+            return selectedChordTypes[randomIndex];
+        }
+
+        function displayRandomNote() {
+            var noteElement = document.getElementById('note');
+            var randomNote = getRandomNote();
+            var randomChordType = getRandomChordType();
+            noteElement.textContent = randomNote + " " + randomChordType;
+        }
+
+        function updateInterval() {
+            var selectedInterval = document.getElementById('refreshInterval').value;
+            clearInterval(intervalId);
+            intervalId = setInterval(displayRandomNote, selectedInterval * 1000);
+        }
+
+        window.onload = function () {
+            updateInterval();
+        };
+    </script>
+</head>
+
+<body>
+    <div class="title-container">
+        <h1>Nail the Changes</h1>
+        <p>Random root and chord type from the chromatic scale:</p>
+    </div>
+    <div class="note-container">
+        <p id="note"></p>
+        <label for="refreshInterval">Refresh Interval (seconds):</label>
+        <select id="refreshInterval" onchange="updateInterval()">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <div class="chord-options">
+            <label><input type="checkbox" class="chord-option" value="Maj" checked>Maj</label>
+            <label><input type="checkbox" class="chord-option" value="Min" checked>Min</label>
+            <label><input type="checkbox" class="chord-option" value="7" checked>7</label>
+            <label><input type="checkbox" class="chord-option" value="Maj7" checked>Maj7</label>
+            <label><input type="checkbox" class="chord-option" value="Min7" checked>Min7</label>
+            <label><input type="checkbox" class="chord-option" value="Min7b5" checked>Min7b5</label>
+        </div>
+        <div class="chord-options">
+            <!-- New checkboxes for including/excluding sharps -->
+            <label><input type="checkbox" id="includeSharps" checked>Include Sharps</label>
+            <label><input type="checkbox" id="includeFlats" checked>Include Flats</label>
+        </div>
+    </div>
+</body>
+
+</html>
